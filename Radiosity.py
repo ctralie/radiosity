@@ -86,6 +86,7 @@ class HemiCube(object):
 				
 
 def splitIntoRGBA(val):
+	val = val << 7
 	A = (0xff000000&val)>>24
 	R = (0x00ff0000&val)>>16
 	G = (0x0000ff00&val)>>8
@@ -93,7 +94,7 @@ def splitIntoRGBA(val):
 	return [R, G, B, A]
 
 def extractFromRGBA(R, G, B, A):
-	return (((A<<24)&0xff000000) | ((R<<16)&0x00ff0000) | ((G<<8)&0x0000ff00) | (B&0x000000ff))
+	return (((A<<24)&0xff000000) | ((R<<16)&0x00ff0000) | ((G<<8)&0x0000ff00) | (B&0x000000ff))>>7
 
 class Radiosity(object):
 	def __init__(self):

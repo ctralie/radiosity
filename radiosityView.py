@@ -121,7 +121,7 @@ class Viewer(object):
 			print "%s seconds elapsed"%elapsed
 		elif key in ['t', 'T']:
 			start = time()
-			for i in range(0, 1):
+			for i in range(0, 20):
 				self.radiosity.shootNext()
 			elapsed = time() - start
 			print "%s seconds elapsed"%elapsed
