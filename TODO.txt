@@ -1,0 +1,9 @@
+*Add the relevant radiosity fields to EMScene
+
+*Understand rendering equation and hemicube warping
+
+*Implement mesh edge splitting rules for adaptive subdivision
+
+*Set up radiosity variable (3 doubles for RGB) that resides in each face, and set up a function to draw those variables
+
+*Calculate form factors using hemicubes
