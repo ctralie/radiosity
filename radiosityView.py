@@ -9,6 +9,7 @@ from Graphics3D import *
 from PolyMesh import *
 from Cameras3D import *
 from EMScene import *
+from Radiosity import *
 from sys import argv
 import random
 import Image
@@ -27,12 +28,11 @@ class Viewer(object):
 		self.drawNormals = 0
 		
 		#Camera state variables
-		self.scene = EMScene()
-		self.scene.Read(filename, False)
+		self.radiosity = Radiosity()
+		self.radiosity.loadScene(filename)
 		
 		self.camera = MouseSphericalCamera(self.GLUTwindow_width, self.GLUTwindow_height)
 		random.seed()
-		self.initRenderBuffer()
 		self.initGL()
 
 	def GLUTResize(self, w, h):
@@ -59,8 +59,7 @@ class Viewer(object):
 		
 		glEnable(GL_LIGHTING)
 
-		#TODO: Modify this for radiosity
-		self.scene.renderGL()
+		self.radiosity.renderPointerImage()
 		glutSwapBuffers()
 	
 	def handleMouseStuff(self, x, y):
@@ -109,7 +108,7 @@ class Viewer(object):
 		glutPostRedisplay()
 		
 	def GLUTMouse(self, button, state, x, y):
-		buttonMap = {GLUT_LEFT_BUTTON:0, GLUT_MIDDLE_BUTTON:1, GLUT_RIGHT_BUTTON:2, 3:3, 4:4}
+		buttonMap = {GLUT_LEFT_BUTTON:0, GLUT_MIDDLE_BUTTON:1, GLUT_RIGHT_BUTTON:2, 3:3, 4:4, 5:5}
 		if state == GLUT_DOWN:
 			self.GLUTButton[buttonMap[button]] = 1
 		else:
@@ -159,12 +158,6 @@ class Viewer(object):
 		glEnable(GL_DEPTH_TEST)
 		
 		glutMainLoop()
-	
-	def initRenderBuffer(self):
-		#fb = glGenFramebuffersEXT(1)
-		#glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0)
-		#print "fb=%i"%fb
-		print "Finished setting up renderbuffer"
 
 if __name__ == '__main__':
 	if len(argv) < 2:
