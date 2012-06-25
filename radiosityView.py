@@ -11,6 +11,7 @@ from Cameras3D import *
 from EMScene import *
 from Radiosity import *
 from sys import argv
+from time import time
 import random
 import Image
 
@@ -44,6 +45,11 @@ class Viewer(object):
 		glutPostRedisplay()
 
 	def GLUTRedraw(self):
+		glClearColor(0.0, 0.0, 0.0, 0.0)
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+		glViewport(0, 0, self.GLUTwindow_width, self.GLUTwindow_height)
+		glScissor(0, 0, self.GLUTwindow_width, self.GLUTwindow_height)
+
 		#Set up projection matrix
 		glMatrixMode(GL_PROJECTION)
 		glLoadIdentity()
@@ -51,15 +57,14 @@ class Viewer(object):
 		
 		#Set up modelview matrix
 		self.camera.gotoCameraFrame()	
-		glClearColor(0.0, 0.0, 0.0, 0.0)
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 		
 		glLightfv(GL_LIGHT0, GL_POSITION, [3.0, 4.0, 5.0, 0.0]);
 		glLightfv(GL_LIGHT1, GL_POSITION,  [-3.0, -2.0, -3.0, 0.0]);
 		
 		glEnable(GL_LIGHTING)
 
-		self.radiosity.renderPointerImage()
+		#self.radiosity.renderPointerImage()
+		self.radiosity.scene.renderGL()
 		glutSwapBuffers()
 	
 	def handleMouseStuff(self, x, y):
@@ -95,6 +100,12 @@ class Viewer(object):
 					yp = x
 					pix[x, y] = (pixels[xp][yp][0], pixels[xp][yp][1], pixels[xp][yp][2])
 			im.save("out.png")
+		elif key in ['g', 'G']:
+			start = time()
+			for i in range(0, 100):
+				self.radiosity.tileGatherLight(self.radiosity.tiles[i])
+			elapsed = time() - start
+			print "%s seconds elapsed"%elapsed
 		glutPostRedisplay()
 	
 	def GLUTSpecial(self, key, x, y):

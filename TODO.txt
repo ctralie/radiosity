@@ -1,9 +1,9 @@
 *Implement offscreen rendering
+-Set up camera parameters
+-Set up multiplication maps for 5 hemicube faces
 
-*Calculate form factors using hemicubes
+*Add capabilities for adaptive subdivision
+-Do adaptive star subdivision with pointers back and forth from new edges to their parent edge
 
-*Understand rendering equation and hemicube warping
-
-*Set up radiosity variable (3 doubles for RGB) that resides in each face, and set up a function to draw those variables
-
-*Implement mesh edge splitting rules for adaptive subdivision
+Add function to mesh class to cut faces within a bounding box out
+#(can use to make windows)
