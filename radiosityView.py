@@ -64,7 +64,8 @@ class Viewer(object):
 		glEnable(GL_LIGHTING)
 
 		#self.radiosity.renderPointerImage()
-		self.radiosity.scene.renderGL()
+		#self.radiosity.scene.renderGL()
+		self.radiosity.renderLightImage(self.drawEdges)
 		glutSwapBuffers()
 	
 	def handleMouseStuff(self, x, y):
@@ -85,6 +86,8 @@ class Viewer(object):
 			self.drawEdges = 1 - self.drawEdges
 		elif key in ['v', 'V']:
 			self.drawVerts = 1 - self.drawVerts
+		elif key in ['n', 'N']:
+			self.drawNormals = 1 - self.drawNormals
 		elif key in ['s', 'S']:
 			print "Reading pixels"
 			width = self.GLUTwindow_width
@@ -104,6 +107,12 @@ class Viewer(object):
 			start = time()
 			for i in range(0, 100):
 				self.radiosity.tileGatherLight(self.radiosity.tiles[i])
+			elapsed = time() - start
+			print "%s seconds elapsed"%elapsed
+		elif key in ['t', 'T']:
+			start = time()
+			for i in range(0, 1):
+				self.radiosity.shootNext()
 			elapsed = time() - start
 			print "%s seconds elapsed"%elapsed
 		glutPostRedisplay()

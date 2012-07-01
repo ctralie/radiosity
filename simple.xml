@@ -1,0 +1,8 @@
+<EMScene>
+	<RadiosityMaterials>
+		<material name = "graywall" em = "0 0 0" p = "0.5 0.5 0.5"/>
+		<material name = "whitelight" em = "10 10 10" p = "1 1 1"/>
+	</RadiosityMaterials>
+	<rect P3 = "-0.2 -0.2 1.49" P2 = "0.2 -0.2 1.49" P1 = "0.2 0.2 1.49" P0 = "-0.2 0.2 1.49" stepSize = "-1" rm = "whitelight"/>
+	<box length = "3" width = "3" height = "3" center = "0 0 0" stepSize="0.1" flipNormals="1" rm = "graywall"/>
+</EMScene>
