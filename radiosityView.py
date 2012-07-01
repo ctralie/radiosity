@@ -27,6 +27,7 @@ class Viewer(object):
 		self.drawEdges = 0
 		self.drawVerts = 0
 		self.drawNormals = 0
+		self.viewLastShootPos = 0
 		
 		#Camera state variables
 		self.radiosity = Radiosity()
@@ -50,13 +51,19 @@ class Viewer(object):
 		glViewport(0, 0, self.GLUTwindow_width, self.GLUTwindow_height)
 		glScissor(0, 0, self.GLUTwindow_width, self.GLUTwindow_height)
 
-		#Set up projection matrix
+		#Set up projection and modelview matrices
 		glMatrixMode(GL_PROJECTION)
 		glLoadIdentity()
-		gluPerspective(180.0*self.camera.yfov/math.pi, float(self.GLUTwindow_width)/self.GLUTwindow_height, 0.01, 100.0)
-		
-		#Set up modelview matrix
-		self.camera.gotoCameraFrame()	
+			
+		if self.viewLastShootPos and self.radiosity.lastShootPos:
+			hemicube = self.radiosity.hemicube
+			frustW = hemicube.nearDist*0.5
+			glFrustum(-frustW, frustW, -frustW, frustW, hemicube.nearDist, hemicube.farDist)
+			[P, t, u, r] = self.radiosity.lastShootPos
+			gotoCameraFrame(t, u, r, P)
+		else:
+			gluPerspective(180.0*self.camera.yfov/math.pi, float(self.GLUTwindow_width)/self.GLUTwindow_height, 0.01, 100.0)
+			self.camera.gotoCameraFrame()	
 		
 		glLightfv(GL_LIGHT0, GL_POSITION, [3.0, 4.0, 5.0, 0.0]);
 		glLightfv(GL_LIGHT1, GL_POSITION,  [-3.0, -2.0, -3.0, 0.0]);
@@ -88,6 +95,9 @@ class Viewer(object):
 			self.drawVerts = 1 - self.drawVerts
 		elif key in ['n', 'N']:
 			self.drawNormals = 1 - self.drawNormals
+		#View the results from the point of view of the last shooter
+		elif key in ['l', 'L']:
+			self.viewLastShootPos = self.viewLastShootPos - 1
 		elif key in ['s', 'S']:
 			print "Reading pixels"
 			width = self.GLUTwindow_width

@@ -20,7 +20,6 @@ import Image
 
 #TODO: Add function to mesh class to cut faces within a bounding box out
 #(can use to make windows)
-#TODO: Add tile rect function and option to invert normals on an object
 #TODO: Figure out reasonable values for nearDist and farDist
 
 #distortOnly: Only account for perspective distortion; ignore incoming angle 
@@ -106,6 +105,7 @@ class Radiosity(object):
 		self.drawEdges = 1
 		self.tiles = []
 		self.hemicube = HemiCube()
+		self.lastShootPos = None
 	
 	def loadScene(self, filename):
 		self.scene.Read(filename, False)
@@ -222,8 +222,8 @@ class Radiosity(object):
 					otherTile = self.tiles[tileIndex]
 					dirVec = tile.getCentroid() - otherTile.getCentroid()
 					dirVec.normalize()
-					#weight = (area/otherTile.getArea())*hemiMask[y*ydim+x]*(dirVec.Dot(otherTile.getNormal()))
-					weight = (area/otherTile.getArea())*(dirVec.Dot(otherTile.getNormal()))/float(dim*dim*3)
+					weight = (area/otherTile.getArea())*hemiMask[y*ydim+x]*(dirVec.Dot(otherTile.getNormal()))
+					#weight = (area/otherTile.getArea())*(dirVec.Dot(otherTile.getNormal()))/float(dim*dim*3)
 					toAdd = weight*tile.RadiosityMat.BUnshot
 					toAdd.Scale(otherTile.RadiosityMat.p) #Scale by the reflectance of the tile
 					otherTile.RadiosityMat.BUnshot = otherTile.RadiosityMat.BUnshot + toAdd
@@ -250,6 +250,7 @@ class Radiosity(object):
 		
 		tile.RadiosityMat.BUnshot = RGB3D(0, 0, 0)
 		self.needsLightDisplayUpdate = True
+		self.lastShootPos = [P, t, u, r]
 
 	#http://www.cmsoft.com.br/index.php?option=com_content&view=category&layout=blog&id=99&Itemid=150
 	def tileGatherLight(self, tile):
